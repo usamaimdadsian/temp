@@ -1,0 +1,14 @@
+wget http://packettotal.com/cache/017131ce91cd0db43b83279d1bfecec0.pcap
+
+alert tcp any any -> 142.250.186.163 80 (
+        content:"HTTP";
+        msg:"msg http detected";
+)
+
+
+snort -c /usr/local/etc/snort/snort.lua -R local.rules -r test.cap
+
+
+https://www.malware-traffic-analysis.net/2022/01/07/2022-01-07-traffic-analysis-exercise.pcap.zip
+
+https://www.malware-traffic-analysis.net/2022/01/20/2022-01-20-Emotet-epoch4-infection-with-spambot-activity.pcap.zip
