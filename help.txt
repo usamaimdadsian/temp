@@ -12,3 +12,19 @@ snort -c /usr/local/etc/snort/snort.lua -R local.rules -r test.cap
 https://www.malware-traffic-analysis.net/2022/01/07/2022-01-07-traffic-analysis-exercise.pcap.zip
 
 https://www.malware-traffic-analysis.net/2022/01/20/2022-01-20-Emotet-epoch4-infection-with-spambot-activity.pcap.zip
+
+sudo tcpreplay -i eth0 -tK -l1000 2022-01-07-traffic-analysis-exercise.pcap
+
+
+
+I used three tcpreplay arugments
+-i : to pick the network interface
+-t : To go as fast as possible
+-K: to use saved pcap file for traffic
+
+
+
+and this is the snort command to detect packets
+sudo snort -c /usr/local/etc/snort/snort.lua -s 65535 -k none -l ./ -i eth0
+
+Let me know if you need any thing else
