@@ -1,0 +1,61 @@
+#! /bin/bash
+# SIEM Lab installer
+#
+# This is a modified version of a splunk installer script from
+# https://gist.github.com/MHaggis/841d17fbd53e46503ff71b69c8ec9f8b
+
+install_splunk() {
+  # Check if Splunk is already installed
+  if [ -f "/opt/splunk/bin/splunk" ]; then
+
+    echo "[$(date +%H:%M:%S)]: Splunk is already installed, exiting."
+    exit 1
+  else
+    echo "[$(date +%H:%M:%S)]: Installing Splunk"
+    # From https://gist.github.com/MHaggis/841d17fbd53e46503ff71b69c8ec9f8b
+    # Get download.splunk.com into the DNS cache. Sometimes resolution randomly fails during wget below
+    #dig @8.8.8.8 download.splunk.com >/dev/null
+    #dig @8.8.8.8 splunk.com >/dev/null
+    #dig @8.8.8.8 www.splunk.com >/dev/null
+
+    ## Try to resolve the latest version of Splunk by parsing the HTML on the downloads page
+    #echo "[$(date +%H:%M:%S)]: Attempting to autoresolve the latest version of Splunk..."
+    #LATEST_SPLUNK=$(curl https://www.splunk.com/en_us/download/splunk-enterprise.html | grep -i deb | grep -Eo "data-link=\"................................................................................................................................" | cut -d '"' -f 2)
+    ## Sanity check what was returned from the auto-parse attempt
+    #if [[ "$(echo $LATEST_SPLUNK | grep -c "^https:")" -eq 1 ]] && [[ "$(echo $LATEST_SPLUNK | grep -c "\.deb$")" -eq 1 ]]; then
+    #  echo "[$(date +%H:%M:%S)]: The URL to the latest Splunk version was automatically resolved as: $LATEST_SPLUNK"
+    #  echo "[$(date +%H:%M:%S)]: Attempting to download..."
+    #  wget --progress=bar:force -P /opt "$LATEST_SPLUNK"
+    #else
+    #  echo "[$(date +%H:%M:%S)]: Unable to auto-resolve the latest Splunk version. Falling back to hardcoded URL..."
+    #  # Download Hardcoded Splunk
+    #  wget --progress=bar:force -O /opt/splunk-8.2.5-77015bc7a462-linux-2.6-amd64.deb 'https://download.splunk.com/products/splunk/releases/8.2.5/linux/splunk-8.2.5-77015bc7a462-linux-2.6-amd64.deb&wget=true'
+    #fi
+    wget --progress=bar:force -O /opt/splunk-8.2.5-77015bc7a462-linux-2.6-amd64.deb 'https://download.splunk.com/products/splunk/releases/8.2.5/linux/splunk-8.2.5-77015bc7a462-linux-2.6-amd64.deb&wget=true'
+    dpkg -i /opt/splunk*.deb
+    /opt/splunk/bin/splunk start --accept-license --answer-yes --no-prompt --seed-passwd isa564rocks
+
+    #### Download a sample dataset from Splunk (BOTS v2)
+    #echo "[$(date +%H:%M:%S)]: Downloading Splunk BOTSv2 Attack Only Dataset."
+    #echo "[$(date +%H:%M:%S)]: This will take time depending on your connection speed..."
+    #wget --progress=bar:force -P /opt/ https://s3.amazonaws.com/botsdataset/botsv2/botsv2_data_set_attack_only.tgz
+    #echo "[$(date +%H:%M:%S)]: Download Complete."
+    #echo "[$(date +%H:%M:%S)]: Extracting to Splunk Apps directory"
+    #tar zxvf /opt/botsv2_data_set_attack_only.tgz -C /opt/splunk/etc/apps/
+    ### ATTACK-ONLY COMMENT BLOCK ENDS ###
+
+    # Enable SSL Login for Splunk
+    echo -e "[settings]\nenableSplunkWebSSL = true" >/opt/splunk/etc/system/local/web.conf
+
+    /opt/splunk/bin/splunk restart
+    /opt/splunk/bin/splunk enable boot-start
+  fi
+}
+
+main() {
+  install_splunk
+}
+
+main
+exit 0
+	
