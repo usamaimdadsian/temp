@@ -12,3 +12,4 @@ https://download.splunk.com/products/universalforwarder/releases/8.2.5/linux/spl
 
 
 setfacl -m u:splunk:r /var/log/auth.log
+https://takahiro-oda.medium.com/splunk-how-to-capture-log-using-splunk-universal-forwarder-b6b87ae62a8b
