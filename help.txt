@@ -21,3 +21,6 @@ https://download.splunk.com/products/universalforwarder/releases/9.0.0/windows/s
 [WinEventLog://Microsoft-Windows-Sysmon/Operational]
 disabled = false renderXml = true
 source = XmlWinEventLog:Microsoft-Windows-Sysmon/Operational
+
+
+https://software-static.download.prss.microsoft.com/sg/download/444969d5-f34g-4e03-ac9d-1f9786c69161/19044.1288.211006-0501.21h2_release_svc_refresh_CLIENTENTERPRISEEVAL_OEMRET_x64FRE_en-us.iso
